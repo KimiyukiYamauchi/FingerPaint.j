@@ -6,6 +6,7 @@
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="15" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -13,7 +14,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".FingerPaintActivity"
-            android:label="@string/title_activity_finger_paint" >
+            android:label="@string/title_activity_finger_paint" android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

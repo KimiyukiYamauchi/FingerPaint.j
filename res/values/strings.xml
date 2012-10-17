@@ -4,5 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_finger_paint">手書きメモ(授業)</string>
+    <string name="menu_save">保存</string>
 
 </resources>

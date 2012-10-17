@@ -1,15 +1,24 @@
 package sample.application.fingerpaint;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DecimalFormat;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -50,8 +59,19 @@ public class FingerPaintActivity extends Activity implements OnTouchListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		MenuInflater mi = getMenuInflater();
+		mi.inflate(R.menu.menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_save:
+			save();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -87,5 +107,57 @@ public class FingerPaintActivity extends Activity implements OnTouchListener {
 		iv.setImageBitmap(bitmap);
 
 		return true;
+	}
+
+	void save() {
+
+		SharedPreferences prefs = getSharedPreferences(
+				"FingerPaintPreferences", MODE_PRIVATE);
+		int imageNumber = prefs.getInt("imageNumber", 1);
+		File file = null;
+
+		if (externalMediaChecker()) {
+			DecimalFormat form = new DecimalFormat("0000");
+			String path = Environment.getExternalStorageDirectory()
+					+ "/mypaint/";
+			File outDir = new File(path);
+			if (!outDir.exists()) {
+				outDir.mkdir();
+			}
+
+			do {
+				file = new File(path + "img" + form.format(imageNumber)
+						+ ".png");
+				imageNumber++;
+			} while (file.exists());
+			if (writeImage(file)) {
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putInt("imageNumber", imageNumber);
+				editor.commit();
+			}
+		}
+	}
+
+	private boolean writeImage(File file) {
+		FileOutputStream fo;
+		try {
+			fo = new FileOutputStream(file);
+			bitmap.compress(CompressFormat.PNG, 100, fo);
+			fo.flush();
+			fo.close();
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+			return false;
+		}
+		return true;
+	}
+
+	private boolean externalMediaChecker() {
+		boolean result = false;
+		String status = Environment.getExternalStorageState();
+		if (status.equals(Environment.MEDIA_MOUNTED)) {
+			result = true;
+		}
+		return result;
 	}
 }
