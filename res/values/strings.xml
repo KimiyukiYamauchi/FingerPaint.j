@@ -8,5 +8,6 @@
     <string name="button_up">上のフォルダー</string>
     <string name="filelist_empty">ファイルがありません</string>
     <string name="menu_open">開く</string>
+    <string name="menu_color_change">色の変更</string>
 
 </resources>

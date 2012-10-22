@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -79,6 +81,21 @@ public class FingerPaintActivity extends Activity implements OnTouchListener {
 		case R.id.menu_open:
 			Intent intent = new Intent(this, FilePicker.class);
 			startActivityForResult(intent, 0);
+			break;
+		case R.id.menu_color_change:
+			final String[] items = getResources().getStringArray(
+					R.array.ColorName);
+			final int[] colors = getResources().getIntArray(R.array.Color);
+			AlertDialog.Builder ab = new AlertDialog.Builder(this);
+			ab.setTitle(R.string.menu_color_change);
+			ab.setItems(items, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int item) {
+					paint.setColor(colors[item]);
+				}
+			});
+			ab.show();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
