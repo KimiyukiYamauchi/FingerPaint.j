@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -95,6 +96,29 @@ public class FingerPaintActivity extends Activity implements OnTouchListener {
 					paint.setColor(colors[item]);
 				}
 			});
+			ab.show();
+			break;
+		case R.id.menu_new:
+			ab = new AlertDialog.Builder(this);
+			ab.setTitle(R.string.menu_new);
+			ab.setMessage(R.string.confirm_new);
+			ab.setPositiveButton(R.string.button_ok,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							canvas.drawColor(Color.WHITE);
+							((ImageView) findViewById(R.id.imageView1))
+									.setImageBitmap(bitmap);
+						}
+					});
+			ab.setNegativeButton(R.string.button_cancel,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
 			ab.show();
 			break;
 		}
@@ -265,6 +289,33 @@ public class FingerPaintActivity extends Activity implements OnTouchListener {
 			ImageView iv = (ImageView) this.findViewById(R.id.imageView1);
 			iv.setImageBitmap(bitmap);
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			AlertDialog.Builder ab = new AlertDialog.Builder(this);
+			ab.setTitle(R.string.titlle_exit);
+			ab.setMessage(R.string.confirm_new);
+			ab.setPositiveButton(R.string.button_ok,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							finish();
+						}
+					});
+			ab.setNegativeButton(R.string.button_cancel,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+			ab.show();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }
